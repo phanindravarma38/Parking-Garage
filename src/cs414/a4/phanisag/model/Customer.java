@@ -6,9 +6,10 @@ import cs414.a4.phanisag.utils.Roles;
 
 public class Customer extends User {
 
-	private Vehicle parkedVehicle;
+	private Vehicle vehicle;
 	private Roles role;
 	private Date paymentDate;
+	private PaymentDetails paymentDetails;
 
 	private int customerID;
 	
@@ -44,8 +45,8 @@ public class Customer extends User {
 		this.isCarParked = isCarParked;
 	}
 
-	public Vehicle getParkedVehicle() {
-		return parkedVehicle;
+	public Vehicle getVehicle() {
+		return vehicle;
 	}
 
 	public Date getPaymentDate() {
@@ -68,8 +69,8 @@ public class Customer extends User {
 		return endTime;
 	}
 
-	public void setParkedVehicle(Vehicle parkedVehicle) {
-		this.parkedVehicle = parkedVehicle;
+	public void setVehicle(Vehicle vehicle) {
+		this.vehicle = vehicle;
 	}
 
 	public void setPaymentDate(Date paymentDate) {
@@ -98,6 +99,14 @@ public class Customer extends User {
 
 	public void setTicketNumber(int ticketNumber) {
 		this.ticketNumber = ticketNumber;
+	}
+
+	public PaymentDetails getPaymentDetails() {
+		return paymentDetails;
+	}
+
+	public void setPaymentDetails(PaymentDetails paymentDetails) {
+		this.paymentDetails = paymentDetails;
 	}
 	
 	

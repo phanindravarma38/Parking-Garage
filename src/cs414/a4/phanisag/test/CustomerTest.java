@@ -1,32 +1,35 @@
 package cs414.a4.phanisag.test;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
+import java.util.Date;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import cs414.a4.phanisag.bo.AttendantBO;
 import cs414.a4.phanisag.bo.CustomerBO;
+import cs414.a4.phanisag.dao.AdminDAO;
+import cs414.a4.phanisag.dao.AttendantDAO;
 import cs414.a4.phanisag.model.Admin;
 import cs414.a4.phanisag.model.Attendant;
 import cs414.a4.phanisag.model.Customer;
 import cs414.a4.phanisag.model.ParkingSpace;
+import cs414.a4.phanisag.model.PaymentDetails;
 import cs414.a4.phanisag.model.Vehicle;
-
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertFalse;
 
 public class CustomerTest {
 	Admin admin;
 	Attendant attendant;
+	CustomerBO customerBo = new CustomerBO();
+	AttendantBO attendantBo = new AttendantBO();
 	//setup()
 	@Before
 	public void setUp(){
-		admin = new Admin();
-		attendant = new Attendant();
+		
+		admin = AdminDAO.getAdmin("test", "test");
+		attendant = AttendantDAO.getAttendant("test", "test");
 		
 	}
 	//1. Customer can park car if there is vacancy.
@@ -36,23 +39,22 @@ public class CustomerTest {
 	public void customerCanParkIfLotVacant(){
 		//Given
 		//Lot is vacant.
-		populateParkingLot(admin);
+		if(admin.getVacantParkingSpaces() != null && admin.getVacantParkingSpaces().size() > 0){
+			Customer customer = new Customer();
+			Vehicle vehicle = new Vehicle();
+			customer.setParkedVehicle(vehicle);
+			
+			attendantBo.issueTicket(customer, attendant);
+			customerBo.parkCar(customer, admin);
+			//Then
+			//assert true carParked.
+			assertTrue(customer.isCarParked());
+		}
 		
-		//When
-		//Customer parks car.
-		Customer customer = new Customer();
-		Vehicle vehicle = new Vehicle();
-		customer.setParkedVehicle(vehicle);
-		
-		AttendantBO.issueTicket(customer, attendant);
-		CustomerBO.parkCar(customer, admin);
-		//Then
-		//assert true carParked.
-		assertTrue(customer.isCarParked());
 	}
 	@Test
 	public void customerCannotParkCarsIfLotFull(){
-		populateParkingLot(admin);
+
 		for(ParkingSpace parkingSpace: admin.getParkingLot()){
 			parkingSpace.setOccupied(true);
 		}
@@ -61,8 +63,10 @@ public class CustomerTest {
 		Vehicle vehicle = new Vehicle();
 		customer.setParkedVehicle(vehicle);
 		
-		AttendantBO.issueTicket(customer, attendant);
-		CustomerBO.parkCar(customer, admin);
+		
+		
+		attendantBo.issueTicket(customer, attendant);
+		customerBo.parkCar(customer, admin);
 		//Then
 		//assert true carParked.
 		assertFalse(customer.isCarParked());
@@ -70,22 +74,24 @@ public class CustomerTest {
 	
 	@Test
 	public void customerCanExitIfThePaymentSucceeds(){
+		Customer customer = new Customer();
+		customer.setCustomerID(111);
+		customer.setParkedVehicle(new Vehicle());
+		
+		attendantBo.issueTicket(customer, attendant);
+		customerBo.parkCar(customer, admin);
+		
+		assertTrue(attendantBo.canMakeExit(customer));
+		customer.setStartTime(new Date(1477265600009l));
+		PaymentDetails paymentDetails = new PaymentDetails();
+		paymentDetails.setAmount(10.00);
+		
+		
+		customer.setPaymentDetails(paymentDetails);
+		
+		boolean isPaymentSuccessful = attendantBo.collectPayment(customer);
+		assertTrue(isPaymentSuccessful);
 		
 	}
-	
-	private void populateParkingLot(Admin admin){
-		
-		ParkingSpace parkingSpace1 = new ParkingSpace();
-		ParkingSpace parkingSpace2 = new ParkingSpace();
-		ParkingSpace parkingSpace3 = new ParkingSpace();
-		ParkingSpace parkingSpace4 = new ParkingSpace();
-		ParkingSpace parkingSpace5 = new ParkingSpace();
-		
-		
-				
-		Set<ParkingSpace> parkingLot = new HashSet<ParkingSpace>(Arrays.asList(parkingSpace1, parkingSpace2, parkingSpace3, parkingSpace4, parkingSpace5));
-		admin.setParkingLot(parkingLot);
-		
-		
-	}
+
 }

@@ -31,13 +31,13 @@ public class Admin extends User{
 	@Override
 	public void setRole(Roles role) {
 		// TODO Auto-generated method stub
-		
+		this.role = role;
 	}
 
 	@Override
 	public Roles getRole() {
 		// TODO Auto-generated method stub
-		return null;
+		return this.role;
 	}
 	
 	public Set<ParkingSpace> getVacantParkingSpaces(){
@@ -48,5 +48,13 @@ public class Admin extends User{
 		}
 		return vacantParkingSpaces;
 	}
+	public int getAdminId() {
+		return adminId;
+	}
+	public void setAdminId(int adminId) {
+		this.adminId = adminId;
+	}
+	
+	
 	
 }
