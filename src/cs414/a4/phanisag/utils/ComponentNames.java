@@ -34,4 +34,7 @@ public class ComponentNames {
 	public static final String SPECIAL_PERMISSION_BUTTON = "SPECIAL_PERMISSION_BUTTON";
 	
 	public static final String PAY_BUTTON = "PAY_BUTTON";
+	
+	public static final String CUSTOMER_NAME_LABEL = "CUSTOMER_NAME_LABEL";
+	public static final String CUSTOMER_NAME_TEXT_AREA = "CUSTOMER_NAME_TEXT_AREA"; 
 }

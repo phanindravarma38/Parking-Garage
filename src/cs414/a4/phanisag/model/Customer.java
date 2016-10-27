@@ -4,10 +4,9 @@ import java.util.Date;
 
 import cs414.a4.phanisag.utils.Roles;
 
-public class Customer extends User {
+public class Customer{
 
 	private Vehicle vehicle;
-	private Roles role;
 	private Date paymentDate;
 	private PaymentDetails paymentDetails;
 
@@ -19,24 +18,16 @@ public class Customer extends User {
 	private int ticketNumber;
 	private boolean isCarParked;
 	
+	private String firstname;
+	private String lastname;
+	
 	private static int i = 1;
 	public Customer(){
 		this.customerID = i;
 		i++;
-		role = Roles.CUSTOMER;
+
 	}
 	
-	@Override
-	public void setRole(Roles role) {
-		this.role = role;
-	}
-
-	@Override
-	public Roles getRole() {
-		return role;
-	}
-	
-
 	public boolean isCarParked() {
 		return isCarParked;
 	}
@@ -107,6 +98,22 @@ public class Customer extends User {
 
 	public void setPaymentDetails(PaymentDetails paymentDetails) {
 		this.paymentDetails = paymentDetails;
+	}
+
+	public String getFirstname() {
+		return firstname;
+	}
+
+	public String getLastname() {
+		return lastname;
+	}
+
+	public void setFirstname(String firstname) {
+		this.firstname = firstname;
+	}
+
+	public void setLastname(String lastname) {
+		this.lastname = lastname;
 	}
 	
 	

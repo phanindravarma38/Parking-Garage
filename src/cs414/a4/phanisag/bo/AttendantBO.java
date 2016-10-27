@@ -13,7 +13,11 @@ public class AttendantBO{
 	
 
 	// Returns ticket number
-	public int issueTicket(Customer customer, Attendant attendant){		
+	public int issueTicket(Customer customer, Attendant attendant){	
+		
+		if(AttendantDAO.getEmptyParkingSpaces() == 0)
+			return 0;
+		
 		int ticketNumber = generateTicketNumber();
 		//int ticketNumber = 1111;
 		

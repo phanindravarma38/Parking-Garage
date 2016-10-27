@@ -51,6 +51,7 @@ public class UserGUI extends JPanel {
 	private JLabel paymentDetailsLabel = new JLabel("PAYMENT DETAILS");
 	private JLabel generateTicketNumberLabel = new JLabel(
 			"Generated Ticket Number");
+	private JLabel customerNameLabel = new JLabel("Customer Name");
 
 	JRadioButton inRadioButton = new JRadioButton("IN");
 
@@ -62,6 +63,7 @@ public class UserGUI extends JPanel {
 	private JTextField ticketNumberTextArea = new JTextField(10);
 	private JTextField plateNumberTextArea = new JTextField(10);
 	private JTextField generateTicketNumberTextArea = new JTextField(10);
+	private JTextField customerNameTextArea = new JTextField(10);
 
 	// JButton
 
@@ -113,6 +115,8 @@ public class UserGUI extends JPanel {
 				.setName(ComponentNames.SPECIAL_PERMISSION_BUTTON);
 
 		payButton.setName(ComponentNames.PAY_BUTTON);
+		customerNameLabel.setName(ComponentNames.CUSTOMER_NAME_LABEL);
+		customerNameTextArea.setName(ComponentNames.CUSTOMER_NAME_TEXT_AREA);
 
 	} // end of constructor
 

@@ -9,6 +9,7 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 
 import cs414.a4.phanisag.bo.AttendantBO;
+import cs414.a4.phanisag.dao.AdminDAO;
 import cs414.a4.phanisag.gui.UserGUI;
 import cs414.a4.phanisag.model.Attendant;
 import cs414.a4.phanisag.model.Customer;
@@ -16,40 +17,60 @@ import cs414.a4.phanisag.model.Vehicle;
 import cs414.a4.phanisag.utils.ComponentNames;
 import cs414.a4.phanisag.utils.Roles;
 
-public class GenerateTicketActionListener implements ActionListener{
+public class GenerateTicketActionListener implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		
-		
+
 		AttendantBO attendantBO = new AttendantBO();
-		
-		JButton generateTicketButton = (JButton)e.getSource();
+
+		JButton generateTicketButton = (JButton) e.getSource();
 		JTextField generatedTicketNumberTextArea = null;
 		JLabel numberOfAvailableCars = null;
-		for(Component component: generateTicketButton.getParent().getComponents()){
-			if(component.getName().equals(ComponentNames.GENERATE_TICKET_NUMBER_TEXT_AREA)){
-				generatedTicketNumberTextArea  = (JTextField)component;
+		JTextField customerNameTextArea = null;
+		JTextField vehiclePlateNumber = null;
+
+		for (Component component : generateTicketButton.getParent()
+				.getComponents()) {
+			if (component.getName().equals(
+					ComponentNames.GENERATE_TICKET_NUMBER_TEXT_AREA)) {
+				generatedTicketNumberTextArea = (JTextField) component;
 			}
-			if(component.getName().equals(ComponentNames.NUMBER_OF_AVAILABLE_CARS_LABEL)){
-				numberOfAvailableCars = (JLabel)component;
+			if (component.getName().equals(
+					ComponentNames.NUMBER_OF_AVAILABLE_CARS_LABEL)) {
+				numberOfAvailableCars = (JLabel) component;
+			}
+			if (component.getName().equals(
+					ComponentNames.CUSTOMER_NAME_TEXT_AREA)) {
+				customerNameTextArea = (JTextField) component;
+			}
+			if (component.getName().equals(
+					ComponentNames.VEHICLE_PLATE_NUMBER_TEXT_AREA)) {
+				vehiclePlateNumber = (JTextField) component;
 			}
 		}
-		
-		
+
 		Vehicle vehicle = new Vehicle();
-		vehicle.setPlateNumber("");
-		
+		vehicle.setPlateNumber(vehiclePlateNumber.getText());
+
 		Attendant attendant = new Attendant();
 		attendant.setRole(Roles.ATTENDANT);
-		
+
 		Customer customer = new Customer();
+		if (customerNameTextArea != null
+				&& customerNameTextArea.getText() != null
+				&& !customerNameTextArea.getText().isEmpty()) {
+			customer.setFirstname(customerNameTextArea.getText().split(" ")[0]);
+			customer.setLastname(customerNameTextArea.getText().split(" ")[1]);
+
+		}
 		customer.setVehicle(vehicle);
 		int ticketNumber = attendantBO.issueTicket(customer, attendant);
 		generatedTicketNumberTextArea.setText(ticketNumber + "");
-		
-		numberOfAvailableCars.setText("Number of Available Lots = " + --UserGUI.numberOfAvailableCars);
-		if(UserGUI.numberOfAvailableCars <= 0){
+
+		numberOfAvailableCars.setText("Number of Available Lots = "
+				+ --UserGUI.numberOfAvailableCars);
+		if (UserGUI.numberOfAvailableCars <= 0) {
 			generateTicketButton.setEnabled(false);
 		}
 	}

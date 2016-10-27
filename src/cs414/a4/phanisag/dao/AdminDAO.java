@@ -1,14 +1,21 @@
 package cs414.a4.phanisag.dao;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
 import cs414.a4.phanisag.model.Admin;
 import cs414.a4.phanisag.model.ParkingSpace;
+import cs414.a4.phanisag.utils.DatabaseConnection;
 
 public class AdminDAO {
 
+	private static Connection connection;
+	
 	private static Admin admin;
 	static {
 		admin = new Admin();
@@ -28,6 +35,5 @@ public class AdminDAO {
 	{
 		return (username.equals("test") && password.equals("test"))? admin : null ;
 	}
-	
-	
+
 }

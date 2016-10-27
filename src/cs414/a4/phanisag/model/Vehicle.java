@@ -1,5 +1,7 @@
 package cs414.a4.phanisag.model;
 
+import cs414.a4.phanisag.utils.Roles;
+
 
 public class Vehicle {
 
@@ -9,12 +11,17 @@ public class Vehicle {
 	private String model;
 	private String year;
 	private String state;
+	private int vehicleId;
 	
 	private ParkingSpace parkingSpace;
 	
+	private static int i = 240;
 	public Vehicle(){
-		plateNumber = (int)Math.random()*100 + "";
+		this.vehicleId = i;
+		i++;
+		
 	}
+	
 
 	public String getPlateNumber() {
 		return plateNumber;
@@ -62,6 +69,14 @@ public class Vehicle {
 
 	public void setParkingSpace(ParkingSpace parkingSpace) {
 		this.parkingSpace = parkingSpace;
+	}
+
+	public int getVehicleId() {
+		return vehicleId;
+	}
+
+	public void setVehicleId(int vehicleId) {
+		this.vehicleId = vehicleId;
 	}
 	
 	

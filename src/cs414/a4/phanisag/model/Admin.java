@@ -5,20 +5,16 @@ import java.util.Set;
 
 import cs414.a4.phanisag.utils.Roles;
 
-public class Admin extends User{
+public class Admin{
 
 
 	private int adminId;
 	private static int i = 1;
-	private Roles role;
 	private Set<ParkingSpace> parkingLot;
-
-
 	
 	public Admin(){
 		adminId = i;
 		i++;
-		role = Roles.ADMIN;
 	}
 	public Set<ParkingSpace> getParkingLot() {
 		return parkingLot;
@@ -26,18 +22,6 @@ public class Admin extends User{
 
 	public void setParkingLot(Set<ParkingSpace> parkingLot) {
 		this.parkingLot = parkingLot;
-	}
-
-	@Override
-	public void setRole(Roles role) {
-		// TODO Auto-generated method stub
-		this.role = role;
-	}
-
-	@Override
-	public Roles getRole() {
-		// TODO Auto-generated method stub
-		return this.role;
 	}
 	
 	public Set<ParkingSpace> getVacantParkingSpaces(){

@@ -42,7 +42,7 @@ public class CustomerTest {
 		if(admin.getVacantParkingSpaces() != null && admin.getVacantParkingSpaces().size() > 0){
 			Customer customer = new Customer();
 			Vehicle vehicle = new Vehicle();
-			customer.setParkedVehicle(vehicle);
+			customer.setVehicle(vehicle);
 			
 			attendantBo.issueTicket(customer, attendant);
 			customerBo.parkCar(customer, admin);
@@ -61,7 +61,7 @@ public class CustomerTest {
 		
 		Customer customer = new Customer();
 		Vehicle vehicle = new Vehicle();
-		customer.setParkedVehicle(vehicle);
+		customer.setVehicle(vehicle);
 		
 		
 		
@@ -76,7 +76,7 @@ public class CustomerTest {
 	public void customerCanExitIfThePaymentSucceeds(){
 		Customer customer = new Customer();
 		customer.setCustomerID(111);
-		customer.setParkedVehicle(new Vehicle());
+		customer.setVehicle(new Vehicle());
 		
 		attendantBo.issueTicket(customer, attendant);
 		customerBo.parkCar(customer, admin);
