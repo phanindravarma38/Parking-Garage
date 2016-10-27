@@ -26,8 +26,11 @@ public class DatabaseConnection {
 						"830779594");
 
 				// Display URL and connection information
-				System.out.println("URL: " + url);
-				System.out.println("Connection: " + connection);
+				//System.out.println("URL: " + url);
+				//System.out.println("Connection: " + connection);
+				
+				
+				
 			} catch (ClassNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

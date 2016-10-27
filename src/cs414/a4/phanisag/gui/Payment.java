@@ -8,6 +8,8 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
@@ -22,11 +24,17 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
+
+import cs414.a4.phanisag.bo.AttendantBO;
+import cs414.a4.phanisag.dao.AttendantDAO;
+import cs414.a4.phanisag.utils.CreditCardValidation;
+import cs414.a4.phanisag.utils.Utilities;
 
 public class Payment extends JPanel {
 
@@ -36,6 +44,7 @@ public class Payment extends JPanel {
 	
 	JLabel expiryDateLabel = new JLabel("Expiry Date");
 	JLabel cvvNumberLabel = new JLabel("CVV");
+	AttendantBO attendantBo = new AttendantBO();
 	
 	//JRadioButton
 	
@@ -48,6 +57,9 @@ public class Payment extends JPanel {
 	//JTextField
 	
 	JTextField creditCardTextFieldOne = new JTextField(4);
+	
+	
+	
 	JTextField creditCardTextFieldTwo = new JTextField(4);
 	JTextField creditCardTextFieldThree = new JTextField(4);
 	JTextField creditCardTextFieldFour = new JTextField(4);
@@ -57,11 +69,11 @@ public class Payment extends JPanel {
 	
 	JTextField expiryDateTextFieldTwo = new JTextField(4);
 	
-	JTextField cvvNumberTextField = new JTextField(4);
+	JPasswordField cvvNumberTextField = new JPasswordField(4);
 	
 	//JButton
 	
-	JButton payButton = new JButton("Pay");
+	JButton payButton = new JButton("Pay and Exit");
 	
 	
 	
@@ -107,6 +119,33 @@ public class Payment extends JPanel {
 	    });
 		
 		
+		creditCardTextFieldOne.addKeyListener(new KeyAdapter() {
+		    public void keyTyped(KeyEvent e) { 
+		        if (creditCardTextFieldOne.getText().length() >= 3 ) // limit textfield to 3 characters
+		            creditCardTextFieldTwo.grabFocus();
+		    }  
+		});
+		
+		creditCardTextFieldTwo.addKeyListener(new KeyAdapter() {
+		    public void keyTyped(KeyEvent e) { 
+		        if (creditCardTextFieldTwo.getText().length() >= 3 ) // limit textfield to 3 characters
+		            creditCardTextFieldThree.grabFocus();
+		    }  
+		});
+		
+		
+		creditCardTextFieldThree.addKeyListener(new KeyAdapter() {
+		    public void keyTyped(KeyEvent e) { 
+		        if (creditCardTextFieldThree.getText().length() >= 3 ) // limit textfield to 3 characters
+		            creditCardTextFieldFour.grabFocus();
+		    }  
+		});
+		
+		
+		
+		
+		
+		
 		cashRadioButton.addActionListener(new java.awt.event.ActionListener() {
 	        public void actionPerformed(java.awt.event.ActionEvent evt) {
 	        	
@@ -114,6 +153,178 @@ public class Payment extends JPanel {
 	        	disableAllFields();
 	        	
 	        }
+
+			
+
+	    });
+		
+		
+		payButton.addActionListener(new java.awt.event.ActionListener() {
+	        public void actionPerformed(java.awt.event.ActionEvent evt) {
+	        	
+	        	
+	        	boolean creditCardPayment = creditCardRadioButton.isSelected();
+	        	
+	        		if(creditCardPayment){
+	        			
+	        			String creditCard = Utilities.handleNullPointerException(creditCardTextFieldOne.getText()).trim() 
+	        					+ Utilities.handleNullPointerException(creditCardTextFieldTwo.getText().trim()) + 
+	        							Utilities.handleNullPointerException(creditCardTextFieldThree.getText().trim()) + 
+	        									Utilities.handleNullPointerException(creditCardTextFieldFour.getText().trim());
+	        			
+	        			
+	        			validateCreditCard(creditCard);
+	        			
+	        			
+	        			
+	        		}
+	        	
+	        }
+
+			private void validateCreditCard(String creditCard) { 	
+				
+				//Credit Card Validation
+				
+				//Hard Code
+				
+				CreditCardValidation validate = new CreditCardValidation();
+				
+				String month = expiryDateTextFieldOne.getText().trim();
+				String year = expiryDateTextFieldTwo.getText().trim();
+				String cvv = cvvNumberTextField.getText().trim();
+				
+				boolean isEmpty = false;
+				
+				if(creditCard.trim().equals("")){
+					isEmpty = true;
+					JOptionPane.showMessageDialog(null, "Credit Card cannot be empty" ,"Credit Card Error",JOptionPane.ERROR_MESSAGE);
+				}
+				
+				
+				if(!isEmpty){
+				if(validate.aValidNumber(creditCard)){
+					
+					boolean validateOtherDetails = validateOtherDetails();
+					
+					if(validateOtherDetails){
+						
+						
+						
+						UserGUI.ticketNumberTextArea.setText("470632");
+						
+						AttendantDAO.updateEndDate(UserGUI.ticketNumberTextArea.getText());
+						
+						int numberOfHours = AttendantDAO.getNumberOfHours(UserGUI.ticketNumberTextArea.getText());
+						
+						double amountToDeduct =  numberOfHours * 10;
+						
+						boolean isCreditCardExists = AttendantDAO.checkCreditCardExists(creditCard,month,year,cvv,amountToDeduct);
+						
+						
+						if(isCreditCardExists){
+							
+							
+							AttendantDAO.updateBalance(creditCard,month,year,cvv,amountToDeduct);
+							
+							JOptionPane.showMessageDialog(null, "Payment Successful !!!");;
+						}
+						
+						
+					}
+					
+					
+					
+					
+				} else{
+					
+					JOptionPane.showMessageDialog(null, "Not a valid Credit Card." ,"Credit Card Error",JOptionPane.ERROR_MESSAGE);
+					
+					creditCardTextFieldOne.setText("");
+					creditCardTextFieldTwo.setText("");
+					creditCardTextFieldThree.setText("");
+					creditCardTextFieldFour.setText("");
+				}
+				}
+				
+				
+				
+			}
+
+			private boolean validateOtherDetails() {
+				boolean validateOtherDetails = true;
+				
+				String month = expiryDateTextFieldOne.getText().trim();
+				String year = expiryDateTextFieldTwo.getText().trim();
+				String cvv = cvvNumberTextField.getText().trim();
+				
+				int currentYear = 2016;
+				
+				if(month.equals("")){
+					JOptionPane.showMessageDialog(null, "Credit Card Expiry Month cannot be empty" ,"Credit Card Error",JOptionPane.ERROR_MESSAGE);
+					validateOtherDetails = false;
+				} else if(!checkInteger(month)){
+					JOptionPane.showMessageDialog(null, "Not a valid Credit Card Expiry Month (1-12)" ,"Credit Card Error",JOptionPane.ERROR_MESSAGE);
+					validateOtherDetails = false;
+					expiryDateTextFieldOne.setText("");
+				} else if(!validMonth(month)){
+					JOptionPane.showMessageDialog(null, "Not a valid Credit Card Expiry Month (1-12)" ,"Credit Card Error",JOptionPane.ERROR_MESSAGE);
+					validateOtherDetails = false;
+					expiryDateTextFieldOne.setText("");
+				}else if(!checkInteger(year)){
+					JOptionPane.showMessageDialog(null, "Not a valid Credit Card Expiry Year" ,"Credit Card Error",JOptionPane.ERROR_MESSAGE);
+					validateOtherDetails = false;
+					expiryDateTextFieldTwo.setText("");
+				} else if((Integer.parseInt(year)<currentYear)){
+					JOptionPane.showMessageDialog(null, "Card Expiry Year cannot be in the past" ,"Credit Card Error",JOptionPane.ERROR_MESSAGE);
+					validateOtherDetails = false;
+					expiryDateTextFieldTwo.setText("");
+				} else if(cvv.equals("")){
+					JOptionPane.showMessageDialog(null, "Cvv cannot be empty" ,"Credit Card Error",JOptionPane.ERROR_MESSAGE);
+					validateOtherDetails = false;
+				}else if(!checkInteger(cvv)){
+					JOptionPane.showMessageDialog(null, "Not a valid Cvv" ,"Credit Card Error",JOptionPane.ERROR_MESSAGE);
+					validateOtherDetails = false;
+					cvvNumberTextField.setText("");
+				} else if(Integer.parseInt(cvv)>999){
+					JOptionPane.showMessageDialog(null, "Not a valid Cvv" ,"Credit Card Error",JOptionPane.ERROR_MESSAGE);
+					validateOtherDetails = false;
+					cvvNumberTextField.setText("");
+				}
+				
+				
+				
+				
+				return validateOtherDetails;
+			}
+
+			private boolean validMonth(String month) {
+				
+				boolean validMonth = false;
+				
+				for(int i=1;i<=12;i++){
+					
+					if(i == Integer.parseInt(month)){
+						validMonth = true;
+						break;
+					}
+					
+				}
+				return validMonth;
+			}
+
+			private boolean checkInteger(String input) {
+				
+				boolean checkInteger = true;
+				
+				try{
+					
+					Integer.parseInt(input);
+					
+				}catch(Exception e){
+					checkInteger = false;
+				}
+				return checkInteger;
+			}
 
 			
 

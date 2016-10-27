@@ -5,6 +5,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.util.Calendar;
+
+import javax.swing.JOptionPane;
 
 import cs414.a4.phanisag.model.Attendant;
 import cs414.a4.phanisag.model.Customer;
@@ -157,5 +160,189 @@ public class AttendantDAO {
 		}
 		
 		return plateNumber.equals(dbPlateNumber);
+	}
+
+	public static void updateEndDate(String ticketNumber) {
+		
+		
+		connection = DatabaseConnection.getConnection();
+		
+		Calendar calendar = Calendar.getInstance();
+		java.util.Date now = calendar.getTime();
+		
+		java.sql.Timestamp currentTimestamp = new java.sql.Timestamp(now.getTime());
+		
+		
+		try {
+			Statement statement = connection.createStatement();
+			int rows = statement.executeUpdate("UPDATE customer SET End_Date = '" + currentTimestamp + "' WHERE Ticket_Number = '" + ticketNumber + "'" );
+			
+			
+			System.out.println(rows);
+			
+			
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		
+		
+	}
+
+	public static int getNumberOfHours(String ticketNumber) {
+		
+		
+		connection = DatabaseConnection.getConnection();
+		
+		
+		java.sql.Timestamp startTimeStamp = null;
+		java.sql.Timestamp endTimeStamp = null;
+		int numberOfHours =0;
+		
+		
+		try {
+			Statement statement = connection.createStatement();
+			
+			
+			ResultSet rs = statement.executeQuery("SELECT * from customer WHERE Ticket_Number = '" + ticketNumber + "'");
+			
+			if(rs.next()){
+				
+				startTimeStamp = rs.getTimestamp("Start_Date");
+				endTimeStamp = rs.getTimestamp("End_Date");
+				
+			}
+			
+			
+			long diff = endTimeStamp.getTime() - startTimeStamp.getTime();
+		    long diffSeconds = diff / 1000 % 60;
+		    double diffMinutes = diff / (60 * 1000) % 60;
+		    long diffHours = diff / (60 * 60 * 1000);
+		    
+		    numberOfHours = (int) Math.ceil(diffMinutes/60.0);
+		    
+		    
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		return numberOfHours;
+		
+		
+		
+	}
+
+	public static boolean checkCreditCardExists(String creditCard,
+			String month, String year, String cvv, double amountToDeduct) {
+		
+		
+		
+		connection = DatabaseConnection.getConnection();
+		boolean isCreditCardExists = false;
+		
+		
+		java.sql.Timestamp startTimeStamp = null;
+		java.sql.Timestamp endTimeStamp = null;
+		int numberOfHours =0;
+		
+		
+		try {
+			Statement statement = connection.createStatement();
+			
+			
+			ResultSet rs = statement.executeQuery("SELECT * from creditCard WHERE cardNumber = '" + creditCard + "' AND " + "expMonth = '" + month + "' AND "+ "expYear = '" + year + "' AND "+ "CVV = '" + cvv + "'");
+			
+			if(rs.next()){
+				
+				String balance = rs.getString("balance");
+				
+				
+				if(Double.parseDouble(balance)>amountToDeduct){
+					isCreditCardExists = true;
+				}else{
+					
+					
+					JOptionPane.showMessageDialog(null, "Insufficient Funds." ,"Credit Card Error",JOptionPane.ERROR_MESSAGE);
+					
+				}
+				
+				
+			}else{
+				
+				JOptionPane.showMessageDialog(null, "Not a valid Credit Card. Credit Card not in database" ,"Credit Card Error",JOptionPane.ERROR_MESSAGE);
+			}
+			
+			
+			
+		    
+		    
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		return isCreditCardExists;
+		
+		
+		
+	
+	}
+
+	public static void updateBalance(String creditCard, String month,
+			String year, String cvv, double amountToDeduct) {
+		
+		
+
+		
+		
+		connection = DatabaseConnection.getConnection();
+		boolean isCreditCardExists = false;
+		
+		
+		java.sql.Timestamp startTimeStamp = null;
+		java.sql.Timestamp endTimeStamp = null;
+		int numberOfHours =0;
+		
+		
+		try {
+			Statement statement = connection.createStatement();
+			
+			
+			ResultSet rs = statement.executeQuery("SELECT * from creditCard WHERE cardNumber = '" + creditCard + "' AND " + "expMonth = '" + month + "' AND "+ "expYear = '" + year + "' AND "+ "CVV = '" + cvv + "'");
+			
+			if(rs.next()){
+				
+				String balance = rs.getString("balance");
+				
+				double balanceUpdate = Double.parseDouble(balance) - amountToDeduct;
+				
+				int rows = statement.executeUpdate("UPDATE creditCard SET balance = '" + String.valueOf(balanceUpdate) + "'" + "WHERE cardNumber = '" + creditCard + "' AND " + "expMonth = '" + month + "' AND "+ "expYear = '" + year + "' AND "+ "CVV = '" + cvv + "'");
+				
+				
+			}
+			
+			
+		    
+		    
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		
+		
+		
+	
+	
 	}
 }

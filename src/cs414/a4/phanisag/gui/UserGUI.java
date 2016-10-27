@@ -60,7 +60,7 @@ public class UserGUI extends JPanel {
 	// JTextBox
 
 	private JTextField vehiclePlateTextArea = new JTextField(10);
-	private JTextField ticketNumberTextArea = new JTextField(10);
+	public static JTextField ticketNumberTextArea = new JTextField(10);
 	private JTextField plateNumberTextArea = new JTextField(10);
 	private JTextField generateTicketNumberTextArea = new JTextField(10);
 	private JTextField customerNameTextArea = new JTextField(10);
