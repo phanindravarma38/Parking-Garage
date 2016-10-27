@@ -3,7 +3,7 @@ package cs414.a4.phanisag.test;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Date;
+import java.sql.Date;
 
 import org.junit.Before;
 import org.junit.Test;

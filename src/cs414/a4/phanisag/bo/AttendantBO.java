@@ -6,7 +6,6 @@ import java.util.Random;
 import cs414.a4.phanisag.dao.AttendantDAO;
 import cs414.a4.phanisag.model.Attendant;
 import cs414.a4.phanisag.model.Customer;
-import cs414.a4.phanisag.model.Vehicle;
 
 public class AttendantBO{
 
@@ -22,18 +21,15 @@ public class AttendantBO{
 		//int ticketNumber = 1111;
 		
 		customer.setTicketNumber(ticketNumber);
-		
+		customer.setStartTime(new Date());
+		AttendantDAO.registerTicketForCustomer(customer, ticketNumber);
 		return ticketNumber;
 		
 	}
 
-	public boolean canMakeExit(Customer customer){	
-		String plateNumber = customer.getVehicle().getPlateNumber();
-		int ticketNumber = customer.getTicketNumber();
+	public boolean canMakeExit(int ticketNumber, String plateNumber){	
 		
-		String plateNumberDb = AttendantDAO.getPlateNumberForCustomerId(customer.getCustomerID());
-		int ticketNumberDb = AttendantDAO.getTicketNumberForCustomerId(customer.getCustomerID());
-		return  plateNumber.equals(plateNumberDb) && (ticketNumberDb == ticketNumber);
+		return AttendantDAO.checkTicketNumberAndNumberPlate(ticketNumber, plateNumber);
 	}
 	
 	
@@ -44,7 +40,7 @@ public class AttendantBO{
 			violationAmount = 50.00;
 		}
 		
-		long difference = new Date().getTime() - customer.getStartTime().getTime();		
+		long difference = new java.util.Date().getTime() - customer.getStartTime().getTime();		
 		double bill = 0.00;
 		int hours = (int)(difference)/(1000*60*60);
 
@@ -66,7 +62,7 @@ public class AttendantBO{
 	private int generateTicketNumber(){
 		Random rand = new Random();
 
-		int  n = rand.nextInt(10000) + 1;
+		int  n = rand.nextInt(1000000) + 1;
 		
 		return n;
 	}

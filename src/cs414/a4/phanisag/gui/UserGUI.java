@@ -207,18 +207,29 @@ public class UserGUI extends JPanel {
 			gbc.anchor = GridBagConstraints.EAST;
 			add(ticketNumberTextArea, gbc);
 
+			gbc.gridx = 0;
+			gbc.gridy = 2;
+			gbc.anchor = GridBagConstraints.EAST;
+			add(customerNameLabel, gbc);
+			
 			gbc.gridx = 1;
 			gbc.gridy = 2;
 			gbc.anchor = GridBagConstraints.EAST;
+			add(customerNameTextArea, gbc);
+			
+			
+			gbc.gridx = 1;
+			gbc.gridy = 3;
+			gbc.anchor = GridBagConstraints.EAST;
 			add(generateTicketNumberTextArea, gbc);
-
+			
 			gbc.gridx = 0;
-			gbc.gridy = 2;
+			gbc.gridy = 3;
 			gbc.anchor = GridBagConstraints.EAST;
 			add(generateTicketNumberLabel, gbc);
 
 			gbc.gridx = 1;
-			gbc.gridy = 3;
+			gbc.gridy = 4;
 			gbc.anchor = GridBagConstraints.EAST;
 			add(generateTicketButton, gbc);
 
@@ -233,7 +244,7 @@ public class UserGUI extends JPanel {
 			add(plateNumberTextArea, gbc);
 
 			gbc.gridx = 1;
-			gbc.gridy = 4;
+			gbc.gridy = 5;
 			gbc.anchor = GridBagConstraints.EAST;
 			add(specialPermissionButton, gbc);
 

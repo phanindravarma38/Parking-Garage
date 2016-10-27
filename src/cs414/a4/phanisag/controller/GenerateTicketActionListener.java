@@ -54,19 +54,23 @@ public class GenerateTicketActionListener implements ActionListener {
 		vehicle.setPlateNumber(vehiclePlateNumber.getText());
 
 		Attendant attendant = new Attendant();
-		attendant.setRole(Roles.ATTENDANT);
 
 		Customer customer = new Customer();
 		if (customerNameTextArea != null
 				&& customerNameTextArea.getText() != null
 				&& !customerNameTextArea.getText().isEmpty()) {
 			customer.setFirstname(customerNameTextArea.getText().split(" ")[0]);
-			customer.setLastname(customerNameTextArea.getText().split(" ")[1]);
+			if (customerNameTextArea.getText().split(" ").length > 1)
+				customer.setLastname(customerNameTextArea.getText().split(" ")[1]);
 
 		}
 		customer.setVehicle(vehicle);
 		int ticketNumber = attendantBO.issueTicket(customer, attendant);
-		generatedTicketNumberTextArea.setText(ticketNumber + "");
+		if (ticketNumber == 0) {
+			generatedTicketNumberTextArea.setText("generate failed.");
+		} else {
+			generatedTicketNumberTextArea.setText(ticketNumber + "");
+		}
 
 		numberOfAvailableCars.setText("Number of Available Lots = "
 				+ --UserGUI.numberOfAvailableCars);

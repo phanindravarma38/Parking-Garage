@@ -7,6 +7,7 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
+import cs414.a4.phanisag.bo.AttendantBO;
 import cs414.a4.phanisag.gui.Payment;
 import cs414.a4.phanisag.utils.ComponentNames;
 
@@ -30,9 +31,18 @@ public class PayButtonActionListener implements ActionListener {
 			}
 		}
 
-		if (validatePay()) {
+		AttendantBO attendantBo = new AttendantBO();
+		
 
-			Payment.openPayment();
+		if (validatePay()) {
+			if(attendantBo.canMakeExit(
+					Integer.parseInt(ticketNumberTextArea.getText()),
+					plateNumberTextArea.getText()))
+				Payment.openPayment();
+			else
+				JOptionPane.showMessageDialog(null,
+						"Ticket Number is not associated with Vehicle.", "Input Error",
+						JOptionPane.ERROR_MESSAGE);
 		}
 
 	}

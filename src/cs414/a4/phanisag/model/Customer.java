@@ -2,8 +2,6 @@ package cs414.a4.phanisag.model;
 
 import java.util.Date;
 
-import cs414.a4.phanisag.utils.Roles;
-
 public class Customer{
 
 	private Vehicle vehicle;
@@ -21,12 +19,7 @@ public class Customer{
 	private String firstname;
 	private String lastname;
 	
-	private static int i = 1;
-	public Customer(){
-		this.customerID = i;
-		i++;
 
-	}
 	
 	public boolean isCarParked() {
 		return isCarParked;
@@ -76,11 +69,11 @@ public class Customer{
 		this.parkingSlot = parkingSlot;
 	}
 
-	public void setStartTime(Date startTime) {
+	public void setStartTime(java.util.Date startTime) {
 		this.startTime = startTime;
 	}
 
-	public void setEndTime(Date endTime) {
+	public void setEndTime(java.util.Date endTime) {
 		this.endTime = endTime;
 	}
 
