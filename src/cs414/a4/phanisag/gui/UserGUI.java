@@ -30,6 +30,7 @@ import cs414.a4.phanisag.controller.GenerateTicketActionListener;
 import cs414.a4.phanisag.controller.InRadioButtonActionListener;
 import cs414.a4.phanisag.controller.OutRadioButtonActionListener;
 import cs414.a4.phanisag.controller.PayButtonActionListener;
+import cs414.a4.phanisag.controller.SpecialPermissionActionListener;
 import cs414.a4.phanisag.utils.ComponentNames;
 
 public class UserGUI extends JPanel {
@@ -265,6 +266,7 @@ public class UserGUI extends JPanel {
 		payButton.addActionListener(new PayButtonActionListener());
 		inRadioButton.addActionListener(new InRadioButtonActionListener());
 		outRadioButton.addActionListener(new OutRadioButtonActionListener());
+		specialPermissionButton.addActionListener(new SpecialPermissionActionListener());
 	}
 
 	public static void main(String[] args) {

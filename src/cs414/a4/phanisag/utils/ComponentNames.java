@@ -39,5 +39,6 @@ public class ComponentNames {
 	public static final String CUSTOMER_NAME_TEXT_AREA = "CUSTOMER_NAME_TEXT_AREA"; 
 	public static final String REPORT_DURATION = "REPORT_DURATION";			
 			
-			
+	public static final String ADMIN_USERNAME = "ADMIN_USERNAME";
+	public static final String ADMIN_PASSWORD = "ADMIN_PASSWORD";
 }

@@ -24,23 +24,25 @@ public class AdminDAO {
 	private static Connection connection;
 
 	private static Admin admin;
-	static {
-		admin = new Admin();
-		ParkingSpace parkingSpace1 = new ParkingSpace();
-		ParkingSpace parkingSpace2 = new ParkingSpace();
-		ParkingSpace parkingSpace3 = new ParkingSpace();
-		ParkingSpace parkingSpace4 = new ParkingSpace();
-		ParkingSpace parkingSpace5 = new ParkingSpace();
-
-		Set<ParkingSpace> parkingLot = new HashSet<ParkingSpace>(Arrays.asList(
-				parkingSpace1, parkingSpace2, parkingSpace3, parkingSpace4,
-				parkingSpace5));
-		admin.setParkingLot(parkingLot);
-	}
 
 	public static Admin getAdmin(String username, String password) {
-		return (username.equals("test") && password.equals("test")) ? admin
-				: null;
+		connection = DatabaseConnection.getConnection();
+		Admin admin = new Admin();
+		try {
+			Statement statement = connection.createStatement();
+			ResultSet rs = statement.executeQuery("SELECT * FROM admin WHERE username = '"+username+"' AND password = '"+password+"'");
+			if(rs.next()){
+				admin.setAdminId(rs.getInt(1));
+				admin.setUsername(username);
+				
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		return admin;
 	}
 
 	public static List<Map<String, String>> getReport(long startTime,
