@@ -18,6 +18,7 @@ public class InRadioButtonActionListener implements ActionListener {
 	private JButton generateTicketButton;
 	private JButton payButton;
 	private JButton specialPermissionButton;
+	private JTextField customerName;
 
 	public void actionPerformed(java.awt.event.ActionEvent evt) {
 
@@ -46,6 +47,9 @@ public class InRadioButtonActionListener implements ActionListener {
 					ComponentNames.SPECIAL_PERMISSION_BUTTON)) {
 				specialPermissionButton = (JButton) component;
 			}
+			if (component.getName().equals(ComponentNames.CUSTOMER_NAME_TEXT_AREA)){
+				customerName = (JTextField) component;
+			}
 		}
 
 		enablInFields();
@@ -60,7 +64,7 @@ public class InRadioButtonActionListener implements ActionListener {
 		payButton.setEnabled(false);
 		generateTicketButton.setEnabled(true);
 		specialPermissionButton.setEnabled(true);
-
+		customerName.setEnabled(true);
 	}
 
 }

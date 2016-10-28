@@ -37,4 +37,7 @@ public class ComponentNames {
 	
 	public static final String CUSTOMER_NAME_LABEL = "CUSTOMER_NAME_LABEL";
 	public static final String CUSTOMER_NAME_TEXT_AREA = "CUSTOMER_NAME_TEXT_AREA"; 
+	public static final String REPORT_DURATION = "REPORT_DURATION";			
+			
+			
 }

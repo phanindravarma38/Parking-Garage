@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.Calendar;
+import java.util.Date;
 
 import javax.swing.JOptionPane;
 
@@ -175,7 +176,7 @@ public class AttendantDAO {
 		
 		try {
 			Statement statement = connection.createStatement();
-			int rows = statement.executeUpdate("UPDATE customer SET End_Date = '" + currentTimestamp + "' WHERE Ticket_Number = '" + ticketNumber + "'" );
+			int rows = statement.executeUpdate("UPDATE customer SET End_Date = '" + currentTimestamp + "' WHERE Ticket_Number = " + ticketNumber  );
 			
 			
 			System.out.println(rows);
@@ -199,33 +200,17 @@ public class AttendantDAO {
 		
 		
 		java.sql.Timestamp startTimeStamp = null;
-		java.sql.Timestamp endTimeStamp = null;
 		int numberOfHours =0;
-		
-		
 		try {
 			Statement statement = connection.createStatement();
-			
-			
 			ResultSet rs = statement.executeQuery("SELECT * from customer WHERE Ticket_Number = '" + ticketNumber + "'");
-			
 			if(rs.next()){
-				
 				startTimeStamp = rs.getTimestamp("Start_Date");
-				endTimeStamp = rs.getTimestamp("End_Date");
-				
 			}
-			
-			
-			long diff = endTimeStamp.getTime() - startTimeStamp.getTime();
-		    long diffSeconds = diff / 1000 % 60;
+			long diff = new Date().getTime() - startTimeStamp.getTime();
 		    double diffMinutes = diff / (60 * 1000) % 60;
-		    long diffHours = diff / (60 * 60 * 1000);
 		    
 		    numberOfHours = (int) Math.ceil(diffMinutes/60.0);
-		    
-		    
-			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

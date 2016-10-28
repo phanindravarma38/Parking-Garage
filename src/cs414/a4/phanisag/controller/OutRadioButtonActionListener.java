@@ -14,6 +14,7 @@ public class OutRadioButtonActionListener implements ActionListener {
 	private JTextField vehiclePlateTextArea;
 	private JTextField ticketNumberTextArea;
 	private JTextField plateNumberTextArea;
+	private JTextField customerName;
 
 	private JButton generateTicketButton;
 	private JButton payButton;
@@ -46,6 +47,9 @@ public class OutRadioButtonActionListener implements ActionListener {
 					ComponentNames.SPECIAL_PERMISSION_BUTTON)) {
 				specialPermissionButton = (JButton) component;
 			}
+			if (component.getName().equals(ComponentNames.CUSTOMER_NAME_TEXT_AREA)){
+				customerName = (JTextField) component;
+			}
 		}
 
 		enableOutFields();
@@ -60,7 +64,7 @@ public class OutRadioButtonActionListener implements ActionListener {
 		payButton.setEnabled(true);
 		generateTicketButton.setEnabled(false);
 		specialPermissionButton.setEnabled(false);
-
+		customerName.setEnabled(false);
 	}
 
 }
