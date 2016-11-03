@@ -1,40 +1,32 @@
 package cs414.a4.phanisag.gui;
 
+import java.awt.Component;
 import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.util.ArrayList;
 
-import javax.imageio.ImageIO;
-import javax.rmi.CORBA.Util;
 import javax.swing.ButtonGroup;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JRadioButton;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.ScrollPaneConstants;
 
 import cs414.a4.phanisag.bo.AttendantBO;
+import cs414.a4.phanisag.dao.AdminDAO;
 import cs414.a4.phanisag.dao.AttendantDAO;
+import cs414.a4.phanisag.utils.ComponentNames;
 import cs414.a4.phanisag.utils.CreditCardValidation;
 import cs414.a4.phanisag.utils.Utilities;
 
-public class Payment extends JPanel {
+public class PaymentGUI extends JPanel {
 
 	GridBagConstraints gbc = new GridBagConstraints();
 
@@ -64,25 +56,25 @@ public class Payment extends JPanel {
 
 	JPasswordField cvvNumberTextField = new JPasswordField(4);
 
+	public static JLabel billAmount = new JLabel("Amount: ");
 	// JButton
 
 	JButton payButton = new JButton("Pay and Exit");
 
 	static JFrame f;
 
-	public Payment() {
+	public PaymentGUI() {
 
 		initGUI();
 		doTheLayout();
-
 		disableAllFields();
-
+		setNames();
+		
+		
 		creditCardRadioButton
 				.addActionListener(new java.awt.event.ActionListener() {
 					public void actionPerformed(java.awt.event.ActionEvent evt) {
-
 						enableAllFields();
-
 					}
 
 					private void enableAllFields() {
@@ -139,9 +131,11 @@ public class Payment extends JPanel {
 
 		});
 
-		payButton.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
+		payButton.addActionListener(new ActionListener() {
 
+			AttendantBO attendantBo = new AttendantBO();
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				
 				boolean creditCardPayment = creditCardRadioButton.isSelected();
 				boolean cash = cashRadioButton.isSelected();
 				if (creditCardPayment) {
@@ -161,21 +155,21 @@ public class Payment extends JPanel {
 					validateCreditCard(creditCard);
 
 				} else if (cash){
-					AttendantDAO
-					.updateEndDate(UserGUI.ticketNumberTextArea
-							.getText());
-					f.dispose();
+					attendantBo.updateEndDate(UserGUI.ticketNumberTextArea.getText());
+					
+					PaymentGUI.dispose();
 					JOptionPane.showMessageDialog(null,
 							"Payment Successful !!!");
+					
+					
+					int numberofAvailableCars = AdminDAO.getNumberOfAvailableSlots();
+					
+					UserGUI.numberofAvailableCars.setText("Number of Available Lots = " + numberofAvailableCars);
 				}
 
 			}
 
 			private void validateCreditCard(String creditCard) {
-
-				// Credit Card Validation
-
-				// Hard Code
 
 				CreditCardValidation validate = new CreditCardValidation();
 
@@ -198,10 +192,7 @@ public class Payment extends JPanel {
 						boolean validateOtherDetails = validateOtherDetails();
 
 						if (validateOtherDetails) {
-							AttendantDAO
-									.updateEndDate(UserGUI.ticketNumberTextArea
-											.getText());
-
+							attendantBo.updateEndDate(UserGUI.ticketNumberTextArea.getText());
 							int numberOfHours = AttendantDAO
 									.getNumberOfHours(UserGUI.ticketNumberTextArea
 											.getText());
@@ -210,11 +201,16 @@ public class Payment extends JPanel {
 									.checkCreditCardExists(creditCard, month,
 											year, cvv, amountToDeduct);
 							if (isCreditCardExists) {
+								UserGUI.dispose();
 								AttendantDAO.updateBalance(creditCard, month,
 										year, cvv, amountToDeduct);
 								JOptionPane.showMessageDialog(null,
 										"Payment Successful !!!");
-								;
+								String[] strings = null;
+								UserGUI.main(strings);
+								
+								int numberofAvailableCars = AdminDAO.getNumberOfAvailableSlots();
+								UserGUI.numberofAvailableCars.setText("Number of Available Lots = " + numberofAvailableCars);
 							}
 						}
 					} else {
@@ -317,7 +313,8 @@ public class Payment extends JPanel {
 				return checkInteger;
 			}
 
-		});
+
+});
 
 	} // end of constructor
 
@@ -335,7 +332,7 @@ public class Payment extends JPanel {
 
 	}
 
-	static void dispose() {
+	public static void dispose() {
 
 		if (f != null)
 			f.dispose();
@@ -364,6 +361,11 @@ public class Payment extends JPanel {
 			gbc.anchor = GridBagConstraints.EAST;
 			add(creditCardRadioButton, gbc);
 
+			gbc.gridx = 2;
+			gbc.gridy = 0;
+			gbc.anchor = GridBagConstraints.EAST;
+			add(billAmount,gbc);
+			
 			gbc.gridx = 4;
 			gbc.gridy = 0;
 			gbc.anchor = GridBagConstraints.EAST;
@@ -430,7 +432,7 @@ public class Payment extends JPanel {
 		f = new JFrame("Payment Info");
 		Container contentPane = f.getContentPane();
 		f.setResizable(false);
-		contentPane.add(new Payment());
+		contentPane.add(new PaymentGUI());
 		f.pack();
 		f.setLocationRelativeTo(null);
 		f.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -445,7 +447,7 @@ public class Payment extends JPanel {
 		f = new JFrame("Payment Info");
 		Container contentPane = f.getContentPane();
 		f.setResizable(false);
-		contentPane.add(new Payment());
+		contentPane.add(new PaymentGUI());
 		f.pack();
 		f.setLocationRelativeTo(null);
 		f.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -453,6 +455,34 @@ public class Payment extends JPanel {
 		// f.setSize(400, 200);
 		f.setVisible(true);
 
+	}
+	
+	private void setNames(){
+
+		expiryDateLabel.setName(ComponentNames.EXPIRY_DATE_LABEL);
+		cvvNumberLabel.setName(ComponentNames.CVV_NUMBER_LABEL);
+		// JRadioButton
+
+		creditCardRadioButton.setName(ComponentNames.CREDIT_CARD_RADIO_BUTTON);
+
+		cashRadioButton.setName(ComponentNames.CASH_RADIO_BUTTON);
+		// JTextField
+
+		creditCardTextFieldOne.setName(ComponentNames.CREDIT_CARD_TEXT_FIELD_ONE);
+
+		creditCardTextFieldTwo.setName(ComponentNames.CREDIT_CARD_TEXT_FIELD_TWO);
+		creditCardTextFieldThree.setName(ComponentNames.CREDIT_CARD_TEXT_FIELD_THREE);
+		creditCardTextFieldFour.setName(ComponentNames.CREDIT_CARD_TEXT_FIELD_FOUR);
+
+		expiryDateTextFieldOne.setName(ComponentNames.EXPIRY_DATE_TEXT_FIELD_ONE);
+
+		expiryDateTextFieldTwo.setName(ComponentNames.EXPIRY_DATE_TEXT_FIELD_TWO);
+
+		cvvNumberTextField.setName(ComponentNames.CVV_NUMBER_TEXT_FIELD);
+		billAmount.setName(ComponentNames.BILL_AMOUNT_LABEL);
+	}
+	public static void setBillAmount(Double amount){
+		billAmount.setText("Amount: " + amount);
 	}
 
 }

@@ -6,28 +6,19 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.util.ArrayList;
 
-import javax.imageio.ImageIO;
-import javax.rmi.CORBA.Util;
 import javax.swing.ButtonGroup;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.ScrollPaneConstants;
 
+import cs414.a4.phanisag.bo.AdminBO;
 import cs414.a4.phanisag.controller.GenerateTicketActionListener;
 import cs414.a4.phanisag.controller.InRadioButtonActionListener;
+import cs414.a4.phanisag.controller.LostTicketActionListener;
 import cs414.a4.phanisag.controller.OutRadioButtonActionListener;
 import cs414.a4.phanisag.controller.PayButtonActionListener;
 import cs414.a4.phanisag.controller.SpecialPermissionActionListener;
@@ -37,7 +28,7 @@ public class UserGUI extends JPanel {
 
 	GridBagConstraints gbc = new GridBagConstraints();
 
-	public static int numberOfAvailableCars = 3;
+	public static int numberOfAvailableSpaces;
 	// JLabel
 
 	private JLabel inLabel;
@@ -46,8 +37,7 @@ public class UserGUI extends JPanel {
 	private JLabel ticketNumber;
 	private JLabel plateNumberLabel = new JLabel("Enter Plate No");
 
-	private JLabel numberofAvailableCars = new JLabel(
-			"Number of Available Lots = " + numberOfAvailableCars);
+	public static JLabel numberofAvailableCars ;
 
 	private JLabel paymentDetailsLabel = new JLabel("PAYMENT DETAILS");
 	private JLabel generateTicketNumberLabel = new JLabel(
@@ -74,10 +64,20 @@ public class UserGUI extends JPanel {
 
 	private JButton payButton = new JButton("Pay");
 
+	private JButton lostTicketButton = new JButton("Lost Ticket ? ");
+
 	static JFrame f;
 
+	static {
+		AdminBO admin = new AdminBO();
+		numberOfAvailableSpaces = admin.getLotCapacity();
+		numberofAvailableCars = new JLabel(
+				"Number of Available Lots = " + numberOfAvailableSpaces);
+	}
+	
 	public UserGUI() {
-
+		/*AdminBO admin = new AdminBO();
+		numberOfAvailableCars = admin.getLotCapacity();*/
 		initGUI();
 		doTheLayout();
 		addActionListeners();
@@ -98,7 +98,7 @@ public class UserGUI extends JPanel {
 		inRadioButton.setName(ComponentNames.IN_RADIO_BUTTON);
 
 		outRadioButton.setName(ComponentNames.OUT_RADIO_BUTTON);
-
+		lostTicketButton.setName(ComponentNames.LOST_TICKET_BUTTON);
 		// JTextBox
 
 		vehiclePlateTextArea
@@ -121,7 +121,7 @@ public class UserGUI extends JPanel {
 
 	} // end of constructor
 
-	static void dispose() {
+	public static void dispose() {
 
 		if (f != null)
 			f.dispose();
@@ -212,18 +212,17 @@ public class UserGUI extends JPanel {
 			gbc.gridy = 2;
 			gbc.anchor = GridBagConstraints.EAST;
 			add(customerNameLabel, gbc);
-			
+
 			gbc.gridx = 1;
 			gbc.gridy = 2;
 			gbc.anchor = GridBagConstraints.EAST;
 			add(customerNameTextArea, gbc);
-			
-			
+
 			gbc.gridx = 1;
 			gbc.gridy = 3;
 			gbc.anchor = GridBagConstraints.EAST;
 			add(generateTicketNumberTextArea, gbc);
-			
+
 			gbc.gridx = 0;
 			gbc.gridy = 3;
 			gbc.anchor = GridBagConstraints.EAST;
@@ -254,6 +253,11 @@ public class UserGUI extends JPanel {
 			gbc.anchor = GridBagConstraints.WEST;
 			add(payButton, gbc);
 
+			gbc.gridx = 4;
+			gbc.gridy = 4;
+			gbc.anchor = GridBagConstraints.WEST;
+			add(lostTicketButton, gbc);
+
 		} catch (Exception e) {
 
 		}
@@ -266,11 +270,13 @@ public class UserGUI extends JPanel {
 		payButton.addActionListener(new PayButtonActionListener());
 		inRadioButton.addActionListener(new InRadioButtonActionListener());
 		outRadioButton.addActionListener(new OutRadioButtonActionListener());
-		specialPermissionButton.addActionListener(new SpecialPermissionActionListener());
+		specialPermissionButton
+				.addActionListener(new SpecialPermissionActionListener());
+		lostTicketButton.addActionListener(new LostTicketActionListener());
 	}
 
 	public static void main(String[] args) {
-
+		
 		f = new JFrame("Parking System");
 		Container contentPane = f.getContentPane();
 		f.setResizable(false);
@@ -282,6 +288,13 @@ public class UserGUI extends JPanel {
 		// f.setSize(400, 200);
 		f.setVisible(true);
 
+	}
+
+	public static void updateUserGUI() {
+		f.repaint();
+		f.revalidate();
+		f.getContentPane().repaint();
+		f.getContentPane().revalidate();
 	}
 
 }

@@ -145,189 +145,230 @@ public class AttendantDAO {
 			String plateNumber) {
 
 		connection = DatabaseConnection.getConnection();
-		String dbPlateNumber = null;
+		boolean isOccupied = true;
+		int lotId = 0;
 		try {
 			Statement statement = connection.createStatement();
 			ResultSet rs = statement
-					.executeQuery("SELECT plate_number as plate FROM vehicle veh, customer cus WHERE cus.ticket_number = "
+					.executeQuery("SELECT plate_number as plate, lotId as lotid, isOccupied as occ FROM vehicle veh, customer cus, parking_space par WHERE cus.ticket_number = "
 							+ ticketNumber
-							+ " AND veh.vehicleId = cus.vehicleId");
-			if(rs.next()){
-				dbPlateNumber = rs.getString("plate");
+							+ " AND veh.vehicleId = cus.vehicleId AND veh.parking_space = par.lotId");
+			if (rs.next()) {
+				lotId = rs.getInt("lotid");
+				isOccupied = rs.getBoolean("occ");
 			}
+			if (isOccupied)
+				updateLotDetails(lotId);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		return plateNumber.equals(dbPlateNumber);
+
+		return isOccupied;
+	}
+
+	public static void updateLotDetails(int lotid) {
+		connection = DatabaseConnection.getConnection();
+
+		try {
+			Statement statement = connection.createStatement();
+			statement
+					.executeUpdate("UPDATE parking_space SET isOccupied = false WHERE lotId ="
+							+ lotid);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
 
 	public static void updateEndDate(String ticketNumber) {
-		
-		
+
 		connection = DatabaseConnection.getConnection();
-		
+
 		Calendar calendar = Calendar.getInstance();
 		java.util.Date now = calendar.getTime();
-		
-		java.sql.Timestamp currentTimestamp = new java.sql.Timestamp(now.getTime());
-		
-		
+
+		java.sql.Timestamp currentTimestamp = new java.sql.Timestamp(
+				now.getTime());
+
 		try {
 			Statement statement = connection.createStatement();
-			int rows = statement.executeUpdate("UPDATE customer SET End_Date = '" + currentTimestamp + "' WHERE Ticket_Number = " + ticketNumber  );
-			
-			
+			int rows = statement
+					.executeUpdate("UPDATE customer SET End_Date = '"
+							+ currentTimestamp + "' WHERE Ticket_Number = "
+							+ ticketNumber);
+
 			System.out.println(rows);
-			
-			
-			
+
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		
-		
-		
+
 	}
 
 	public static int getNumberOfHours(String ticketNumber) {
-		
-		
+
 		connection = DatabaseConnection.getConnection();
-		
-		
+
 		java.sql.Timestamp startTimeStamp = null;
-		int numberOfHours =0;
+		int numberOfHours = 0;
 		try {
 			Statement statement = connection.createStatement();
-			ResultSet rs = statement.executeQuery("SELECT * from customer WHERE Ticket_Number = '" + ticketNumber + "'");
-			if(rs.next()){
+			ResultSet rs = statement
+					.executeQuery("SELECT * from customer WHERE Ticket_Number = '"
+							+ ticketNumber + "'");
+			if (rs.next()) {
 				startTimeStamp = rs.getTimestamp("Start_Date");
 			}
 			long diff = new Date().getTime() - startTimeStamp.getTime();
-		    double diffMinutes = diff / (60 * 1000) % 60;
-		    
-		    numberOfHours = (int) Math.ceil(diffMinutes/60.0);
+			double diffMinutes = diff / (60 * 1000) % 60;
+
+			numberOfHours = (int) Math.ceil(diffMinutes / 60.0);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		
+
 		return numberOfHours;
-		
-		
-		
+
 	}
 
 	public static boolean checkCreditCardExists(String creditCard,
 			String month, String year, String cvv, double amountToDeduct) {
-		
-		
-		
+
 		connection = DatabaseConnection.getConnection();
 		boolean isCreditCardExists = false;
-		
-		
+
 		java.sql.Timestamp startTimeStamp = null;
 		java.sql.Timestamp endTimeStamp = null;
-		int numberOfHours =0;
-		
-		
+		int numberOfHours = 0;
+
 		try {
 			Statement statement = connection.createStatement();
-			
-			
-			ResultSet rs = statement.executeQuery("SELECT * from creditCard WHERE cardNumber = '" + creditCard + "' AND " + "expMonth = '" + month + "' AND "+ "expYear = '" + year + "' AND "+ "CVV = '" + cvv + "'");
-			
-			if(rs.next()){
-				
+
+			ResultSet rs = statement
+					.executeQuery("SELECT * from creditCard WHERE cardNumber = '"
+							+ creditCard
+							+ "' AND "
+							+ "expMonth = '"
+							+ month
+							+ "' AND "
+							+ "expYear = '"
+							+ year
+							+ "' AND "
+							+ "CVV = '" + cvv + "'");
+
+			if (rs.next()) {
+
 				String balance = rs.getString("balance");
-				
-				
-				if(Double.parseDouble(balance)>amountToDeduct){
+
+				if (Double.parseDouble(balance) > amountToDeduct) {
 					isCreditCardExists = true;
-				}else{
-					
-					
-					JOptionPane.showMessageDialog(null, "Insufficient Funds." ,"Credit Card Error",JOptionPane.ERROR_MESSAGE);
-					
+				} else {
+
+					JOptionPane.showMessageDialog(null, "Insufficient Funds.",
+							"Credit Card Error", JOptionPane.ERROR_MESSAGE);
+
 				}
-				
-				
-			}else{
-				
-				JOptionPane.showMessageDialog(null, "Not a valid Credit Card. Credit Card not in database" ,"Credit Card Error",JOptionPane.ERROR_MESSAGE);
+
+			} else {
+
+				JOptionPane.showMessageDialog(null,
+						"Not a valid Credit Card. Credit Card not in database",
+						"Credit Card Error", JOptionPane.ERROR_MESSAGE);
 			}
-			
-			
-			
-		    
-		    
-			
+
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		
+
 		return isCreditCardExists;
-		
-		
-		
-	
+
 	}
 
 	public static void updateBalance(String creditCard, String month,
 			String year, String cvv, double amountToDeduct) {
-		
-		
 
-		
-		
 		connection = DatabaseConnection.getConnection();
 		boolean isCreditCardExists = false;
-		
-		
+
 		java.sql.Timestamp startTimeStamp = null;
 		java.sql.Timestamp endTimeStamp = null;
-		int numberOfHours =0;
-		
+		int numberOfHours = 0;
+
+		try {
+			Statement statement = connection.createStatement();
+
+			ResultSet rs = statement
+					.executeQuery("SELECT * from creditCard WHERE cardNumber = '"
+							+ creditCard
+							+ "' AND "
+							+ "expMonth = '"
+							+ month
+							+ "' AND "
+							+ "expYear = '"
+							+ year
+							+ "' AND "
+							+ "CVV = '" + cvv + "'");
+
+			if (rs.next()) {
+
+				String balance = rs.getString("balance");
+
+				double balanceUpdate = Double.parseDouble(balance)
+						- amountToDeduct;
+
+				int rows = statement
+						.executeUpdate("UPDATE creditCard SET balance = '"
+								+ String.valueOf(balanceUpdate) + "'"
+								+ "WHERE cardNumber = '" + creditCard
+								+ "' AND " + "expMonth = '" + month + "' AND "
+								+ "expYear = '" + year + "' AND " + "CVV = '"
+								+ cvv + "'");
+
+			}
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
+	public static boolean lostTicketCheckout(String vehicleNumber) {
+		connection = DatabaseConnection.getConnection();
+		int update = 0;
+		try {
+			Statement statement = connection.createStatement();
+			update = statement
+					.executeUpdate("UPDATE parking_space SET isOccupied = false WHERE lotId = (SELECT parking_space FROM vehicle WHERE Plate_Number = '"
+							+ vehicleNumber + "'");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return update > 0;
+	}
+	public static boolean isVehiclePresent(String vehicleNumber) {
+		connection = DatabaseConnection.getConnection();
+		String isVehiclePresent = null;
 		
 		try {
 			Statement statement = connection.createStatement();
-			
-			
-			ResultSet rs = statement.executeQuery("SELECT * from creditCard WHERE cardNumber = '" + creditCard + "' AND " + "expMonth = '" + month + "' AND "+ "expYear = '" + year + "' AND "+ "CVV = '" + cvv + "'");
-			
-			if(rs.next()){
-				
-				String balance = rs.getString("balance");
-				
-				double balanceUpdate = Double.parseDouble(balance) - amountToDeduct;
-				
-				int rows = statement.executeUpdate("UPDATE creditCard SET balance = '" + String.valueOf(balanceUpdate) + "'" + "WHERE cardNumber = '" + creditCard + "' AND " + "expMonth = '" + month + "' AND "+ "expYear = '" + year + "' AND "+ "CVV = '" + cvv + "'");
-				
-				
-			}
-			
-			
-		    
-		    
-			
+			ResultSet rs = statement
+					.executeQuery("SELECT Plate_Number plate FROM customer cust, vehicle veh WHERE veh.Plate_Number = '"
+							+ vehicleNumber
+							+ "' AND cust.VehicleId = veh.VehicleId AND cust.End_Date is NULL");
+			if(rs.next())
+				isVehiclePresent = rs.getString(1);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-		
-		
-		
-		
-	
-	
+		return isVehiclePresent != null;
 	}
 }

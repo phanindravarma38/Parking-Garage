@@ -8,14 +8,13 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
+import cs414.a4.phanisag.bo.AdminBO;
 import cs414.a4.phanisag.bo.AttendantBO;
-import cs414.a4.phanisag.dao.AdminDAO;
 import cs414.a4.phanisag.gui.UserGUI;
 import cs414.a4.phanisag.model.Attendant;
 import cs414.a4.phanisag.model.Customer;
 import cs414.a4.phanisag.model.Vehicle;
 import cs414.a4.phanisag.utils.ComponentNames;
-import cs414.a4.phanisag.utils.Roles;
 
 public class GenerateTicketActionListener implements ActionListener {
 
@@ -32,6 +31,8 @@ public class GenerateTicketActionListener implements ActionListener {
 
 		for (Component component : generateTicketButton.getParent()
 				.getComponents()) {
+	 
+	if(component != null && component.getName() != null){
 			if (component.getName().equals(
 					ComponentNames.GENERATE_TICKET_NUMBER_TEXT_AREA)) {
 				generatedTicketNumberTextArea = (JTextField) component;
@@ -48,7 +49,7 @@ public class GenerateTicketActionListener implements ActionListener {
 					ComponentNames.VEHICLE_PLATE_NUMBER_TEXT_AREA)) {
 				vehiclePlateNumber = (JTextField) component;
 			}
-		}
+		}}
 
 		Vehicle vehicle = new Vehicle();
 		vehicle.setPlateNumber(vehiclePlateNumber.getText());
@@ -70,13 +71,14 @@ public class GenerateTicketActionListener implements ActionListener {
 			generatedTicketNumberTextArea.setText("generate failed.");
 		} else {
 			generatedTicketNumberTextArea.setText(ticketNumber + "");
+			numberOfAvailableCars.setText("Number of Available Lots = "
+					+ new AdminBO().getLotCapacity());
 		}
-
-		numberOfAvailableCars.setText("Number of Available Lots = "
-				+ --UserGUI.numberOfAvailableCars);
-		if (UserGUI.numberOfAvailableCars <= 0) {
+		if (UserGUI.numberOfAvailableSpaces <= 0) {
 			generateTicketButton.setEnabled(false);
 		}
 	}
+	}
 
-}
+
+

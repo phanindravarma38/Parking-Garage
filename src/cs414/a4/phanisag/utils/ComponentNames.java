@@ -41,4 +41,27 @@ public class ComponentNames {
 			
 	public static final String ADMIN_USERNAME = "ADMIN_USERNAME";
 	public static final String ADMIN_PASSWORD = "ADMIN_PASSWORD";
+	public static final String LOST_TICKET_BUTTON = "LOST_TICKET_BUTTON";
+	
+	public static final String EXPIRY_DATE_LABEL = "EXPIRY_DATE_LABEL";
+	public static final String CVV_NUMBER_LABEL = "CVV_NUMBER_LABEL";
+	// JRadioButton
+
+	public static final String CREDIT_CARD_RADIO_BUTTON = "CREDIT_CARD_RADIO_BUTTON";
+
+	public static final String CASH_RADIO_BUTTON = "CREDIT_CARD_RADIO_BUTTON";
+	// JTextField
+
+	public static final String CREDIT_CARD_TEXT_FIELD_ONE = "CREDIT_CARD_TEXT_FIELD_ONE";
+
+	public static final String CREDIT_CARD_TEXT_FIELD_TWO = "CREDIT_CARD_TEXT_FIELD_TWO";
+	public static final String CREDIT_CARD_TEXT_FIELD_THREE = "CREDIT_CARD_TEXT_FIELD_THREE";
+	public static final String CREDIT_CARD_TEXT_FIELD_FOUR = "CREDIT_CARD_TEXT_FIELD_FOUR";
+
+	public static final String EXPIRY_DATE_TEXT_FIELD_ONE = "EXPIRY_DATE_TEXT_FIELD_ONE";
+
+	public static final String EXPIRY_DATE_TEXT_FIELD_TWO = "EXPIRY_DATE_TEXT_FIELD_TWO";
+
+	public static final String CVV_NUMBER_TEXT_FIELD = "CVV_NUMBER_TEXT_FIELD";
+	public static final String BILL_AMOUNT_LABEL = "BILL_AMOUNT_LABEL";
 }

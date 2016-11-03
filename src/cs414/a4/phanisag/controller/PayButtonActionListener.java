@@ -8,7 +8,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 import cs414.a4.phanisag.bo.AttendantBO;
-import cs414.a4.phanisag.gui.Payment;
+import cs414.a4.phanisag.dao.AttendantDAO;
+import cs414.a4.phanisag.gui.PaymentGUI;
+import cs414.a4.phanisag.gui.UserGUI;
 import cs414.a4.phanisag.utils.ComponentNames;
 
 public class PayButtonActionListener implements ActionListener {
@@ -21,6 +23,7 @@ public class PayButtonActionListener implements ActionListener {
 		JButton payButton = (JButton) evt.getSource();
 
 		for (Component component : payButton.getParent().getComponents()) {
+			if(component != null && component.getName() != null){	
 			if (component.getName().equals(
 					ComponentNames.TICKET_NUMBER_TEXT_AREA)) {
 				ticketNumberTextArea = (JTextField) component;
@@ -30,15 +33,22 @@ public class PayButtonActionListener implements ActionListener {
 				plateNumberTextArea = (JTextField) component;
 			}
 		}
-
+		}
 		AttendantBO attendantBo = new AttendantBO();
 		
 
 		if (validatePay()) {
 			if(attendantBo.canMakeExit(
 					Integer.parseInt(ticketNumberTextArea.getText()),
-					plateNumberTextArea.getText()))
-				Payment.openPayment();
+					plateNumberTextArea.getText(), false)){
+				int numberOfHours = AttendantDAO
+						.getNumberOfHours(UserGUI.ticketNumberTextArea
+								.getText());
+				numberOfHours = numberOfHours == 0? 1 : numberOfHours;
+				PaymentGUI.setBillAmount(numberOfHours * 10.00);
+				PaymentGUI.openPayment();
+			}
+				
 			else
 				JOptionPane.showMessageDialog(null,
 						"Ticket Number is not associated with Vehicle.", "Input Error",

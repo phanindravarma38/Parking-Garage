@@ -44,6 +44,7 @@ public class AdminDAO {
 		
 		return admin;
 	}
+	
 
 	public static List<Map<String, String>> getReport(long startTime,
 			long endTime) {
@@ -92,6 +93,24 @@ public class AdminDAO {
 			e.printStackTrace();
 		}
 		return report;
+	}
+	
+	public static int getNumberOfAvailableSlots(){
+		connection = DatabaseConnection.getConnection();
+		int numberOfAvailableParkingSlots = 0;
+		try {
+			Statement statement = connection.createStatement();
+			ResultSet rs = statement.executeQuery("SELECT count(*) FROM parking_space WHERE isOccupied = false");
+			if(rs.next()){
+				numberOfAvailableParkingSlots = rs.getInt(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		
+		return numberOfAvailableParkingSlots;
+		
 	}
 
 }

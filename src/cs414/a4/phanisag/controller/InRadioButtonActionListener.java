@@ -24,34 +24,39 @@ public class InRadioButtonActionListener implements ActionListener {
 
 		JRadioButton inRadioButton = (JRadioButton) evt.getSource();
 		for (Component component : inRadioButton.getParent().getComponents()) {
-			if (component.getName().equals(
-					ComponentNames.VEHICLE_PLATE_NUMBER_TEXT_AREA)) {
-				vehiclePlateTextArea = (JTextField) component;
-			}
-			if (component.getName().equals(
-					ComponentNames.TICKET_NUMBER_TEXT_AREA)) {
-				ticketNumberTextArea = (JTextField) component;
-			}
-			if (component.getName().equals(
-					ComponentNames.PLATE_NUMBER_TEXT_AREA)) {
-				plateNumberTextArea = (JTextField) component;
-			}
-			if (component.getName().equals(ComponentNames.PAY_BUTTON)) {
-				payButton = (JButton) component;
-			}
-			if (component.getName().equals(
-					ComponentNames.GENERATE_TICKET_BUTTON)) {
-				generateTicketButton = (JButton) component;
-			}
-			if (component.getName().equals(
-					ComponentNames.SPECIAL_PERMISSION_BUTTON)) {
-				specialPermissionButton = (JButton) component;
-			}
-			if (component.getName().equals(ComponentNames.CUSTOMER_NAME_TEXT_AREA)){
-				customerName = (JTextField) component;
+
+			if (component != null && component.getName() != null) {
+
+				if (component.getName().equals(
+						ComponentNames.VEHICLE_PLATE_NUMBER_TEXT_AREA)) {
+					vehiclePlateTextArea = (JTextField) component;
+				}
+				if (component.getName().equals(
+						ComponentNames.TICKET_NUMBER_TEXT_AREA)) {
+					ticketNumberTextArea = (JTextField) component;
+				}
+				if (component.getName().equals(
+						ComponentNames.PLATE_NUMBER_TEXT_AREA)) {
+					plateNumberTextArea = (JTextField) component;
+				}
+				if (component.getName().equals(ComponentNames.PAY_BUTTON)) {
+					payButton = (JButton) component;
+				}
+				if (component.getName().equals(
+						ComponentNames.GENERATE_TICKET_BUTTON)) {
+					generateTicketButton = (JButton) component;
+				}
+				if (component.getName().equals(
+						ComponentNames.SPECIAL_PERMISSION_BUTTON)) {
+					specialPermissionButton = (JButton) component;
+				}
+				if (component.getName().equals(
+						ComponentNames.CUSTOMER_NAME_TEXT_AREA)) {
+					customerName = (JTextField) component;
+				}
+
 			}
 		}
-
 		enablInFields();
 
 	}

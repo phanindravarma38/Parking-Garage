@@ -15,7 +15,6 @@ public class PaymentDetails {
 	private String cvv1;
 	private String cvv2;
 	private Double amount;
-	private Address billingAddress;
 	public String getPaymentMethod() {
 		return paymentMethod;
 	}
@@ -46,9 +45,7 @@ public class PaymentDetails {
 	public Double getAmount() {
 		return amount;
 	}
-	public Address getBillingAddress() {
-		return billingAddress;
-	}
+
 	public void setPaymentMethod(String paymentMethod) {
 		this.paymentMethod = paymentMethod;
 	}
@@ -79,9 +76,7 @@ public class PaymentDetails {
 	public void setAmount(Double amount) {
 		this.amount = amount;
 	}
-	public void setBillingAddress(Address billingAddress) {
-		this.billingAddress = billingAddress;
-	}
+
 	
 	
 }

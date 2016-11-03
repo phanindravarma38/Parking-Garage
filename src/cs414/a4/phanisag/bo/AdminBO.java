@@ -25,14 +25,17 @@ public class AdminBO {
 
 	private ReportDuration reportDuration;
 
-	
-	public boolean doLogin(String username, String password){
-		
+	public boolean doLogin(String username, String password) {
+
 		Admin admin = AdminDAO.getAdmin(username, password);
-		
+
 		return admin != null;
 	}
-	
+
+	public int getLotCapacity() {
+		return AdminDAO.getNumberOfAvailableSlots();
+	}
+
 	// download report as pdf.
 	public void generateReport(ReportDuration reportDuration) {
 		List<Map<String, String>> report = null;
@@ -119,8 +122,9 @@ public class AdminBO {
 	}
 
 	private void initializeHtml(BufferedWriter bw) throws IOException {
-		bw.write("<html><head><title>"+reportDuration+" Report</title><head><body>"
-				+ "<h1>"+reportDuration+" Report</h1><table>");
+		bw.write("<html><head><title>" + reportDuration
+				+ " Report</title><head><body>" + "<h1>" + reportDuration
+				+ " Report</h1><table>");
 	}
 
 	private void doHeaders(BufferedWriter bw) throws IOException {
