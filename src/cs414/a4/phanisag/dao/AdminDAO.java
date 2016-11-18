@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -68,21 +69,17 @@ public class AdminDAO {
 				Timestamp startTimeDb = rs.getTimestamp(4);
 				Timestamp endTimeDb = rs.getTimestamp(5);
 				String ticketNumber = rs.getInt(6) + "";
-
+				
+				SimpleDateFormat sdf = new SimpleDateFormat("MM/dd-hh:mm");
+				
 				tuple.put(Constants.VEHICLE_NUMBER, vehicleNumber);
 				tuple.put(Constants.CUSTOMER_NAME, customerName);
 				tuple.put(Constants.START_TIME,
-						startTimeDb.toLocalDateTime().toString().split("T")[0]
-								+ " "
-								+ startTimeDb.toLocalDateTime().toString()
-										.split("T")[1]);
+						sdf.format(new Date(startTimeDb.getTime())));
 				if (endTimeDb != null)
 					tuple.put(
 							Constants.END_TIME,
-							endTimeDb.toLocalDateTime().toString().split("T")[0]
-									+ " "
-									+ endTimeDb.toLocalDateTime().toString()
-											.split("T")[1]);
+							sdf.format(new Date(endTimeDb.getTime())));
 				tuple.put(Constants.TICKET_NUMBER, ticketNumber);
 
 				report.add(tuple);

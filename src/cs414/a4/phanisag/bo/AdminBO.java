@@ -4,17 +4,25 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import cs414.a4.phanisag.bo.intrface.AdminBOInterface;
 import cs414.a4.phanisag.dao.AdminDAO;
 import cs414.a4.phanisag.model.Admin;
 import cs414.a4.phanisag.utils.Constants;
 import cs414.a4.phanisag.utils.ParkingStatus;
 import cs414.a4.phanisag.utils.ReportDuration;
 
-public class AdminBO {
+public class AdminBO extends UnicastRemoteObject implements AdminBOInterface {
+
+	public AdminBO() throws RemoteException {
+		super();
+		// TODO Auto-generated constructor stub
+	}
 
 	private String customerName = "Customer Name";
 	private String vehicleNo = "Vehicle Number";
@@ -136,5 +144,12 @@ public class AdminBO {
 
 	private void endHtml(BufferedWriter bw) throws IOException {
 		bw.write("</table></body></html>");
+	}
+
+	@Override
+	public int getNumberOfAvailableSlots() throws RemoteException {
+		// TODO Auto-generated method stub
+		return AdminDAO
+				.getNumberOfAvailableSlots();
 	}
 }

@@ -1,16 +1,21 @@
 package cs414.a4.phanisag.bo;
 
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.Date;
 import java.util.Random;
 
+import cs414.a4.phanisag.bo.intrface.AttendantBOInterface;
 import cs414.a4.phanisag.dao.AttendantDAO;
-import cs414.a4.phanisag.gui.UserGUI;
 import cs414.a4.phanisag.model.Attendant;
 import cs414.a4.phanisag.model.Customer;
 
-public class AttendantBO{
+public class AttendantBO extends UnicastRemoteObject implements AttendantBOInterface{
 
-	
+	public AttendantBO() throws RemoteException {
+		super();
+		// TODO Auto-generated constructor stub
+	}
 
 	// Returns ticket number
 	public int issueTicket(Customer customer, Attendant attendant){	
@@ -50,8 +55,32 @@ public class AttendantBO{
 	
 	public void updateEndDate(String ticketNumber){
 		AttendantDAO
-		.updateEndDate(UserGUI.ticketNumberTextArea
-				.getText());
+		.updateEndDate(ticketNumber);
+	}
+
+	@Override
+	public int getNumberOfHours(String ticketNumber) throws RemoteException {
+		// TODO Auto-generated method stub
+		return AttendantDAO
+				.getNumberOfHours(ticketNumber);
+	}
+
+	@Override
+	public boolean checkCreditCardExists(String creditCard, String month,
+			String year, String cvv, double amountToDeduct)
+			throws RemoteException {
+		// TODO Auto-generated method stub
+		return AttendantDAO
+				.checkCreditCardExists(creditCard, month,
+						year, cvv, amountToDeduct);
+	}
+
+	@Override
+	public void updateBalance(String creditCard, String month, String year,
+			String cvv, double amountToDeduct) throws RemoteException {
+		// TODO Auto-generated method stub
+		AttendantDAO.updateBalance(creditCard, month,
+				year, cvv, amountToDeduct);
 	}
 	
 
