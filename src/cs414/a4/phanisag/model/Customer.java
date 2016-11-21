@@ -1,8 +1,9 @@
 package cs414.a4.phanisag.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Customer{
+public class Customer implements Serializable{
 
 	private Vehicle vehicle;
 	private Date paymentDate;

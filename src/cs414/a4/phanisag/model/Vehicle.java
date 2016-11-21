@@ -1,8 +1,10 @@
 package cs414.a4.phanisag.model;
 
+import java.io.Serializable;
 
 
-public class Vehicle {
+
+public class Vehicle implements Serializable {
 
 	
 	private String plateNumber;

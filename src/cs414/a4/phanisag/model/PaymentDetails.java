@@ -1,8 +1,9 @@
 package cs414.a4.phanisag.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class PaymentDetails {
+public class PaymentDetails implements Serializable {
 
 	private String paymentMethod;
 	private String cardNumber;

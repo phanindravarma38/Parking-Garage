@@ -1,7 +1,9 @@
 package cs414.a4.phanisag.model;
 
+import java.io.Serializable;
 
-public class Admin{
+
+public class Admin implements Serializable{
 
 
 	private int adminId;

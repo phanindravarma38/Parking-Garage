@@ -23,6 +23,8 @@ import cs414.a4.phanisag.utils.DatabaseConnection;
 public class AdminDAO {
 
 	private static Connection connection;
+	private static String customerTableName = "Consumer";
+	private static String vehicleTableName = "Vehicle";
 
 	private static Admin admin;
 
@@ -58,7 +60,7 @@ public class AdminDAO {
 			Timestamp endTimeUi = new Timestamp(endTime);
 
 			ResultSet rs = statement
-					.executeQuery("SELECT Plate_Number, FirstName, LastName, Start_Date, End_Date, Ticket_Number FROM customer cust, vehicle veh WHERE cust.VehicleId = veh.VehicleId AND cust.Start_Date >= '"
+					.executeQuery("SELECT Plate_Number, FirstName, LastName, Start_Date, End_Date, Ticket_Number FROM "+ customerTableName + " cust, "+ vehicleTableName +" veh WHERE cust.VehicleId = veh.VehicleId AND cust.Start_Date >= '"
 							+ startTimeUi
 							+ "' AND (cust.End_Date <= '"
 							+ endTimeUi + "' OR cust.End_Date IS NULL)");
@@ -97,7 +99,7 @@ public class AdminDAO {
 		int numberOfAvailableParkingSlots = 0;
 		try {
 			Statement statement = connection.createStatement();
-			ResultSet rs = statement.executeQuery("SELECT count(*) FROM parking_space WHERE isOccupied = false");
+			ResultSet rs = statement.executeQuery("SELECT count(*) FROM parking_space WHERE isOccupied = 0");
 			if(rs.next()){
 				numberOfAvailableParkingSlots = rs.getInt(1);
 			}

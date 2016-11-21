@@ -1,6 +1,8 @@
 package cs414.a4.phanisag.model;
 
-public class ParkingSpace {
+import java.io.Serializable;
+
+public class ParkingSpace implements Serializable{
 
 	private int parkingLotId;
 	private boolean isOccupied;
